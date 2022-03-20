@@ -21,7 +21,9 @@ models = [
 'bert0de', 
 'bert11de',
 'xlmr0',
-'xlmr11']
+'xlmr11',
+'xglm0',
+'xglm47']
 
 plt.rcParams.update({
  "axes.linewidth":2,
@@ -201,7 +203,7 @@ for test in range(1,3):
        countsAll=[]
        countsAtt=[]
        if(test==1):
-          countsAtt = restaPlUn
+          countsAtt = restaPlUn[:23]
        elif(test==2):
           countsAtt =  restaPlUn[:23]
        fig = plt.figure(figsize=(6.5, 6))

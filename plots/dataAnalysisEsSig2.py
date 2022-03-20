@@ -5,8 +5,7 @@ from matplotlib.ticker import MaxNLocator
 import re
 import numpy as np
 
-prefixP = './it/pValues'
-prefixS = './it/sigmas'
+prefixS = './es/sigmas'
 models = [
 'wiki',
 'wikiAlign',
@@ -19,13 +18,23 @@ models = [
 'w2v9langs',
 'bert0', 
 'bert11',
-'bert0it', 
-'bert11it',
+'bert0es', 
+'bert11es',
 'xlmr0',
 'xlmr11',
 'xglm0',
 'xglm47']
 
+variants = [
+'CO1',
+'CO2',
+'EC1',
+'EC2',
+'ES1',
+'ES2',
+'ES3',
+'MX1'
+]
 plt.rcParams.update({
  "axes.linewidth":2,
  "xtick.major.width":2,
@@ -53,32 +62,17 @@ fontAx = {'family': 'sans-serif',
         }
 
 # Loading counts
-with open ('itListsComplete.stats', 'rt') as statsFile: 
+with open ('esListsComplete.stats', 'rt') as statsFile: 
      contents = statsFile.readlines()
-countsPlUnPl = []
 countsPl = []
 countsUn = []
 restaPlUn = []
-countsW1 = []
-countsW2 = []
 for line in contents:
     tmp = re.findall(r',\s*(\d+)', line.strip())
-    countsPlUnPl.append(int(tmp[0]))
-    countsW1.append(int(tmp[1]))
-    countsW2.append(int(tmp[2]))
-    countsPl.append(int(tmp[3]))
-    countsUn.append(int(tmp[4]))
-    restaPlUn.append(int(tmp[3])-int(tmp[4]))
+    countsPl.append(int(tmp[0]))
+    countsUn.append(int(tmp[1]))
+    restaPlUn.append(int(tmp[0])-int(tmp[1]))
     
-# Loading images
-imageFolder = './it_plots2/img/'
-imgInstrument = mpimg.imread(imageFolder+'62809-guitar-icon.png')
-imgWeapon = mpimg.imread(imageFolder+'62964-pistol-icon.png')
-imgInsect = mpimg.imread(imageFolder+'dragon-fly-icon.png')
-imgFlower = mpimg.imread(imageFolder+'flower-icon.png')
-imgUnpl = mpimg.imread(imageFolder+'big-smile-icon.png')
-imgPlea = mpimg.imread(imageFolder+'unhappy-icon.png')
-
 for test in range(1,3):
   for model in models:
     statistic = []
@@ -91,28 +85,15 @@ for test in range(1,3):
     sizeEffectSigLo = []   
     labels = []
     print(model)
-    outputPlot1 = './it_plots2/ca_'+model+'_its_cosine_'+str(test)+'_statistic.png'
-    outputPlot2 = './it_plots2/ca_'+model+'_its_cosine_'+str(test)+'_sizeff.png'
-    outputPlotF = './it_plots2/freqs/ca_'+model+'_its_cosine_'+str(test)+'_freq.png'
+    outputPlot1 = './es_plots2/ca_'+model+'_ess_cosine_'+str(test)+'_statistic.png'
+    outputPlot2 = './es_plots2/ca_'+model+'_ess_cosine_'+str(test)+'_sizeff.png'
+    outputPlotF = './es_plots2/freqs/ca_'+model+'_ess_cosine_'+str(test)+'_freq.png'
     label = 1
-    for i in range(1,26):
-        #fileName = prefixP+'/ca_'+model+'_it' +str(i)+'_cosine_'+str(test)+'_uncased.res'
-        fileNameSig = prefixS+'/ca_'+model+'_it' +str(i)+'_cosine_'+str(test)+'_uncased.res'
+    for variant in variants:
+        fileNameSig = prefixS+'/ca_'+model+'_es_' +variant+'_cosine_'+str(test)+'_uncased.res'
         res = []
         means = []
         sigmas = []
-        # we read the results with the original lists for medians
-        # WE DONT REALLY NEED THIS, ALL THE INFO BUT P-VALUES ARE IN THE OTHER FILE TOO
-        #try:
-        #  with open (fileName, 'rt') as resultsFile: 
-        #     contents = resultsFile.read() 
-        #     res = re.findall(r'-*[0|1]\.\d\d\d\d\d\d\d\d\d', contents)
-        #except FileNotFoundError:
-        #   print("skipping it" + str(i))
-        #   continue
-        #statistic.append(float(res[0]))
-        #sizeEffect.append(float(res[1]))
-
         # we read the results with boostrapped lists
         try:
           with open (fileNameSig, 'rt') as resultsFile: 
@@ -135,7 +116,7 @@ for test in range(1,3):
         label = label+1
 
     # we read the results with the translated boostrapped list
-    fileNameSigTrad = prefixS+'/trads/ca_'+model+'_it_cosine_'+str(test)+'_uncased.res'
+    fileNameSigTrad = prefixS+'/trads/w2v_'+model+'_es_cosine_'+str(test)+'_uncased.res'
     with open (fileNameSigTrad, 'rt') as resultsFile: 
         contents = resultsFile.read() 
     meansTrad = re.findall(r'(-*\d\.\d\d)\$', contents)
@@ -158,7 +139,7 @@ for test in range(1,3):
         
     #figure(figsize=(8, 6), dpi=80)
     fig = plt.figure(figsize=(6, 6))
-    gs = fig.add_gridspec(2, hspace=0,height_ratios=[1.3,1])
+    gs = fig.add_gridspec(2, hspace=0,height_ratios=[1.2,1.1])
     axs = gs.subplots(sharex=True, sharey=False)
     fig.suptitle(model+'    CA-WEAT '+str(test), fontdict=fontTit)
     axs[0].hist(statistic, bins = 7, color='lightslategrey')
@@ -170,12 +151,14 @@ for test in range(1,3):
     asymmetric_error = np.array(list(zip(statisticSigLo, statisticSigUp))).T
     axs[1].errorbar(statisticSig, labels, xerr=asymmetric_error, fmt='o', ecolor = 'darkred', color='lightslategrey')
     plt.xlim(-0.5, 2)
-    axs[1].errorbar(float(meansTrad[0]), -1, xerr=[[float(sigmasTrad[1])],[float(sigmasTrad[0])]], fmt='o', ecolor = 'darkblue', color='darkblue', ls='--')
+    axs[1].errorbar(float(meansTrad[0]), 0, xerr=[[float(sigmasTrad[1])],[float(sigmasTrad[0])]], fmt='o', ecolor = 'darkblue', color='darkblue', ls='--')
     axs[0].set_yticks(np.arange(0,10.5,2))
-    axs[1].set_ylim(-3,27)
+    axs[1].set_ylim(-1,10)
     axs[1].set_xlabel('Statistic', fontdict=fontAx)
     axs[0].set_ylabel('\# of instances', fontdict=fontAx)
-    axs[1].set_ylabel('orig. instance \#', fontdict=fontAx)
+    axs[1].set_ylabel('orig. instance', fontdict=fontAx)
+    axs[1].set_yticks(np.arange(1,len(variants)+1,1))
+    axs[1].set_yticklabels(variants, fontsize=12)
     fig.align_ylabels(axs)
     for ax in axs:
         ax.label_outer()
@@ -201,7 +184,7 @@ for test in range(1,3):
     #plt.title(model+'    CA-WEAT'+str(test)+',   median: '+medianRes, fontdict=fontTit)
     
     fig = plt.figure(figsize=(6, 6))
-    gs = fig.add_gridspec(2, hspace=0,height_ratios=[1.3,1])
+    gs = fig.add_gridspec(2, hspace=0,height_ratios=[1.2,1.1])
     axs = gs.subplots(sharex=True, sharey=False)
 #    fig.suptitle(model+'    CA-WEAT'+str(test)+',   median: '+medianRes, fontdict=fontTit)
     fig.suptitle(model+'    CA-WEAT '+str(test), fontdict=fontTit)
@@ -212,14 +195,16 @@ for test in range(1,3):
     
     asymmetric_error = np.array(list(zip(sizeEffectSigLo, sizeEffectSigUp))).T
     axs[1].errorbar(sizeEffectSig, labels, xerr=asymmetric_error, fmt='o', ecolor = 'darkred', color='lightslategrey')
-    axs[1].errorbar(float(meansTrad[1]), -1, xerr=[[float(sigmasTrad[3])],[float(sigmasTrad[2])]], fmt='o', ecolor = 'darkblue', color='darkblue', ls='--')
+    axs[1].errorbar(float(meansTrad[1]), 0, xerr=[[float(sigmasTrad[3])],[float(sigmasTrad[2])]], fmt='o', ecolor = 'darkblue', color='darkblue', ls='--')
     axs[0].set_yticks(np.arange(0,10.5,2))
     plt.xlim(-2, 2)
 #    axs[0].set_ylim(0,10)
-    axs[1].set_ylim(-3,27)
+    axs[1].set_ylim(-1,10)
     axs[1].set_xlabel('Size effect', fontdict=fontAx)
     axs[0].set_ylabel('\# of instances', fontdict=fontAx)
-    axs[1].set_ylabel('orig. instance \#', fontdict=fontAx)
+    axs[1].set_ylabel('orig. instance', fontdict=fontAx)
+    axs[1].set_yticks(np.arange(1,len(variants)+1,1))
+    axs[1].set_yticklabels(variants, fontsize=12)
     fig.align_ylabels(axs)
     for ax in axs:
         ax.label_outer()    
@@ -232,34 +217,18 @@ for test in range(1,3):
        countsAll=[]
        countsAtt=[]
        if(test==1):
-          countsAtt = restaPlUn[:24]
-          countsAll = [sum(x) for x in zip(countsW1[:24], countsPlUnPl[:24])]
+          countsAtt = restaPlUn
        elif(test==2):
-          countsAtt =  restaPlUn[:24]
-          countsAll = [sum(x) for x in zip(countsW2[:24], countsPlUnPl[:24])]
+          countsAtt =  restaPlUn
        fig = plt.figure(figsize=(6.5, 6))
-
-       #plt.errorbar(countsAll, sizeEffectSig, yerr=asymmetric_error, fmt='o', ecolor = 'darkred', color='lightslategrey')
-       #m,b = np.polyfit(countsAll, sizeEffectSig, 1)
-       #plt.plot(np.array(countsAll), m*np.array(countsAll) + b)
 
        plt.errorbar(countsAtt, sizeEffectSig, yerr=asymmetric_error, fmt='o', ecolor = 'darkred', color='lightslategrey')
        m,b = np.polyfit(countsAtt, sizeEffectSig, 1)
        plt.plot(np.array(countsAtt), m*np.array(countsAtt) + b)
        
-       #plt.imshow(imgUnpl, extent=(2200000,3100000,-1.5,-1.1), aspect='auto')
-       #plt.imshow(imgPlea, extent=(3200000,4500000,-1.5,-1.1), aspect='auto')
-       #if(test==1):
-       #  plt.imshow(imgFlower, extent=(4600000,6600000,-1.5,-1.1), aspect='auto')
-       #  plt.imshow(imgInsect, extent=(6700000,9000000,-1.5,-1.1), aspect='auto')
-       #  plt.imshow(imgFlower, extent=(240000,350000,-1.5,-1.1), aspect='auto')
-       #  plt.imshow(imgInsect, extent=(370000,500000,-1.5,-1.1), aspect='auto')
-       #elif(test==2):
-       #  plt.imshow(imgInstrument, extent=(4600000,6500000,-1.5,-1.1), aspect='auto')
-       #  plt.imshow(imgWeapon, extent=(6700000,9600000,-1.55,-1.05), aspect='auto')
-       #  plt.imshow(imgInstrument, extent=(400000,580000,-1.5,-1.1), aspect='auto')
-       #  plt.imshow(imgWeapon, extent=(600000,880000,-1.55,-1.05), aspect='auto')
-
+       for i, txt in enumerate(variants):
+           plt.annotate(txt, (countsAtt[i], sizeEffectSig[i]))
+   
        #plt.xscale('log')
        plt.ylabel('Size effect', fontdict=fontAx)
        plt.xlabel('$\Delta$Counts (Pleasant-Unpleasant)', fontdict=fontAx)
