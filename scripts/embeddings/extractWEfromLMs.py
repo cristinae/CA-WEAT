@@ -15,11 +15,13 @@ bertES = 0
 bertDE = 0
 bertIT = 0
 bertEN = 0
+bertAR = 0
+bertTR = 1
 xlm = 0
-xglm = 1
+xglm = 0  # layer 47tb
 # Parameters
-layer = 23  # word embeddings    
-fileName = 'xglmEMB.layer'+str(layer)+'.vec'
+layer = 11  # word embeddings    
+fileName = 'bertEMBtr.layer'+str(layer)+'.vec'
 
 # Load model
 if(bertML):
@@ -52,6 +54,18 @@ elif(bertIT):
                                   output_hidden_states = True, # Whether the model returns all hidden-states.
                                   )
   dim = 768
+elif(bertTR):
+  tokenizer = BertTokenizer.from_pretrained("dbmdz/bert-base-turkish-cased")
+  model = BertModel.from_pretrained('dbmdz/bert-base-turkish-cased',
+                                  output_hidden_states = True, # Whether the model returns all hidden-states.
+                                  )
+  dim = 768
+elif(bertAR):
+  tokenizer = BertTokenizer.from_pretrained("aubmindlab/bert-base-arabertv2")
+  model = BertModel.from_pretrained('aubmindlab/bert-base-arabertv2',
+                                  output_hidden_states = True, # Whether the model returns all hidden-states.
+                                  )
+  dim = 768
 elif(xlm):
   tokenizer = XLMRobertaTokenizer.from_pretrained("xlm-roberta-large")
   model = XLMRobertaModel.from_pretrained("xlm-roberta-large",
@@ -72,8 +86,11 @@ model.eval()
 
 # Read input vocabulary
 files = ['./data/weat_trads.tsv','./data/weat_origs.tsv']
-concepts = ['FLOWERS','INSECTS','INSTRUMENTS','WEAPONS','PLEASANT','UNPLEASANT']
-itemsWEAT = set() # we don't want duplicates
+#files = ['./data/kk.csv']
+concepts = ['FRUITS','FLOWERS','INSECTS','INSTRUMENTS','WEAPONS','PLEASANT','UNPLEASANT']
+#itemsWEAT = set() # we don't want duplicates
+itemsWEAT = set(['España', 'Cataluña', 'Colombia', 'México', 'Bolivia', 'Ecuador', 'Chile', 'Argentina', 'Estados Unidos', 'Europa', 'América', 'Latinoamérica'])
+itemsWEAT = set(['England', 'US', 'America', 'fruta', 'arma', 'instrumento', 'insecto', 'flor'])
 for fileLists in files:
     for concept in concepts:
         df = pd.read_csv(fileLists, sep='\t',index_col=False)
@@ -118,13 +135,10 @@ for text in itemsWEAT:
         print(tokenized_text[i])
         tmp = tmp + hidden_states[layer_i][batch_i][i].numpy()
     print('---')
-    vecsWEAT.append(tmp)
+    vecsWEAT.append(np.around(tmp, decimals=6))
     itemsWEATnb.append(text.rstrip().lstrip().replace(' ','_'))
 
 vecsWEATw2vformat = [str(i) + ' '+ ' '.join(str(x) for x in j)  for i, j in zip(itemsWEATnb, vecsWEAT)]
 with open(fileName, 'w') as f:
     for item in vecsWEATw2vformat:
         f.write("%s\n" % item)
-
-
-
