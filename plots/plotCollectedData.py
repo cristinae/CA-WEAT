@@ -45,6 +45,8 @@ naming = {
 'bert11':'mBERT$_{11}$',
 'bert0'+language:'BERT$_{0}$', 
 'bert11'+language:'BERT$_{11}$',
+'bert0ar':'BERT$_{0}$', 
+'bert11ar':'BERT$_{11}$',
 'bert0es':'BERT$_{0}$', 
 'bert11es':'BERT$_{11}$',
 'bert0de':'BERT$_{0}$', 
@@ -53,6 +55,8 @@ naming = {
 'bert11it':'BERT$_{11}$',
 'bert0en':'BERT$_{0}$', 
 'bert11en':'BERT$_{11}$',
+'bert0tr':'BERT$_{0}$', 
+'bert11tr':'BERT$_{11}$',
 'xlmr0':'XLM-R$_{0}$',
 'xlmr11':'XLM-R$_{11}$',
 'xglm0':'XGLM$_{0}$',
@@ -89,11 +93,11 @@ fontAx = {'family': 'sans-serif',
 
 def plotCountsXweat(df, test):
 
-   model = 'cc10017'
+#   model = 'cc10017'
 #   model = 'cc10017vecmap'
    variable = 'sizeEffect'
    #variable = 'effMedian'
-#   model = 'w2v9langs'
+   model = 'w2v9langs'
    positive = 'cPleasant'
    negative = 'cUnpleasant'
 #   positive = 'cFlowers'
@@ -103,7 +107,7 @@ def plotCountsXweat(df, test):
    countsAtt=dfWithCounts[positive].astype('int')-dfWithCounts[negative].astype('int')
    asymmetric_error = np.array(list(zip(dfWithCounts['D'+variable+'LO'], dfWithCounts['D'+variable+'UP']))).T
 
-   fig = plt.figure(figsize=(9.5, 5))
+   fig = plt.figure(figsize=(9.5, 6))
    plt.errorbar(countsAtt, dfWithCounts[variable], yerr=asymmetric_error, fmt='none', ecolor = 'darkred', color='lightslategrey')
 
    dfHR = dfWithCounts[dfWithCounts['language'].str.startswith('hr')]
@@ -151,7 +155,7 @@ def plotCountsXweat(df, test):
                    Line2D([0], [0], color='m', marker='v', label='ca', markersize=17),
                    Line2D([0], [0], color='m', marker='^', label='ru', markersize=17),
                    Line2D([0], [0], color='m', marker='>', label='tr', markersize=17)
-                   ,Line2D([0], [0], color='k', marker='o', label='en', markersize=17)
+    #               ,Line2D([0], [0], color='k', marker='o', label='en', markersize=17)
                    ]
 
    mb, stats = poly.polyfit(countsAtt, dfWithCounts[variable], 1, full=True)
@@ -165,9 +169,10 @@ def plotCountsXweat(df, test):
    plt.ylabel('Effect size $d$', fontdict=fontAx)
    #plt.xlabel('$\Delta$Counts (Pleasant-Unpleasant)', fontdict=fontAx)
    plt.xlabel(positive + ' - ' + negative, fontdict=fontAx)
-   plt.axis([-2000000, 5500000, -2, 2])
+   plt.axis([-2000000, 7100000, -2, 2])
    plt.yticks(np.arange(-2, 2.01, 1.0))
-#   plt.title('    '+naming[model], fontdict=fontTit)
+#   plt.title('    CA-WEAT'+str(test), fontdict=fontTit)
+   plt.title('    '+naming[model], fontdict=fontTit)
    plt.tight_layout(pad=0.03)
    plt.legend(handles=legend_elements, ncol=5, loc='lower center', frameon=False)
    #plt.show()
@@ -178,10 +183,10 @@ def plotCountsXweat(df, test):
 
 def plotCounts(df, test):
 
-   model = 'cc10017'
+#   model = 'cc10017'
 #   model = 'cc10017vecmap'
    variable = 'sizeEffect'
-#   model = 'w2v9langs'
+   model = 'w2v9langs'
    positive = 'cPleasant'
    negative = 'cUnpleasant'
 #   positive = 'cFlowers'
@@ -191,7 +196,7 @@ def plotCounts(df, test):
    countsAtt=dfWithCounts[positive].astype('int')-dfWithCounts[negative].astype('int')
    asymmetric_error = np.array(list(zip(dfWithCounts['D'+variable+'LO'], dfWithCounts['D'+variable+'UP']))).T
 
-   fig = plt.figure(figsize=(9.5, 5))
+   fig = plt.figure(figsize=(9.5, 6))
    plt.errorbar(countsAtt, dfWithCounts[variable], yerr=asymmetric_error, fmt='none', ecolor = 'darkred', color='lightslategrey')
 
    dfHR = dfWithCounts[dfWithCounts['language'].str.startswith('hr')]
@@ -239,7 +244,7 @@ def plotCounts(df, test):
                    Line2D([0], [0], color='m', marker='v', label='ca', markersize=17),
                    Line2D([0], [0], color='m', marker='^', label='ru', markersize=17),
                    Line2D([0], [0], color='m', marker='>', label='tr', markersize=17)
-                   ,Line2D([0], [0], color='k', marker='o', label='en', markersize=17)
+   #                ,Line2D([0], [0], color='k', marker='o', label='en', markersize=17)
                    ]
 
    mb, stats = poly.polyfit(countsAtt, dfWithCounts[variable], 1, full=True)
@@ -253,9 +258,9 @@ def plotCounts(df, test):
    plt.ylabel('Effect size $d$', fontdict=fontAx)
    #plt.xlabel('$\Delta$Counts (Pleasant-Unpleasant)', fontdict=fontAx)
    plt.xlabel(positive + ' - ' + negative, fontdict=fontAx)
-   plt.axis([-2000000, 5500000, -2, 2])
+   plt.axis([-2000000, 7100000, -2, 2])
    plt.yticks(np.arange(-2, 2.01, 1.0))
-   #plt.title('    '+naming[model], fontdict=fontTit)
+   plt.title('    '+naming[model], fontdict=fontTit)
    plt.tight_layout(pad=0.03)
    plt.legend(handles=legend_elements, ncol=5, loc='lower center', frameon=False)
    #plt.show()
@@ -369,9 +374,9 @@ def plotSExModel(df, test, weat):
 def plotIsomorf(df, measure, test):
    #model = 'cc10017vecmapSup'
    #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & (df['source']==0)  & (df['model']==model) ]
-   dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test)]
+   #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test)]
    #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & (df['source']==1)]
- #  dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & ((df['model'].str.startswith('w')) | (df['model'].str.startswith('x')) | (df['model'].str.startswith('b')))  ]
+   dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & ((df['model'].str.startswith('w')) | (df['model'].str.startswith('x')) | (df['model'].str.startswith('b')))  ]
 #   dfWithISO = df[(df[measure].str.isnumeric()) & (df['test']==test) & (df['source']==1) ]
    asymmetric_error = np.array(list(zip(dfWithISO['DsizeEffectLO'], dfWithISO['DsizeEffectUP']))).T
 
@@ -382,7 +387,7 @@ def plotIsomorf(df, measure, test):
    r2 = 1-SSE/SST 
    print('r2=',r2)
 
-   fig = plt.figure(figsize=(9.5, 5))
+   fig = plt.figure(figsize=(9.5, 6))
    plt.errorbar(dfWithISO[measure].astype('float'), dfWithISO['sizeEffect'], yerr=asymmetric_error, fmt='none', ecolor = 'darkred', color='lightslategrey')
    print(dfWithISO[measure].astype('float').corr(dfWithISO['sizeEffect']))
 
@@ -439,7 +444,7 @@ def plotIsomorf(df, measure, test):
    plt.tight_layout(pad=0.03)
    plt.legend(handles=legend_elements, ncol=4, loc='lower center', frameon=False)
    #plt.show()
-   plt.savefig('iso'+measure+'_allWEAT'+str(test)+'.png')
+   plt.savefig('iso'+measure+'_mlmWEAT'+str(test)+'.png')
    plt.clf()
 
 
@@ -734,7 +739,7 @@ df = pd.read_csv(dataFile)
 
 #plotIsomorf(df, 'EV', 1)
 #plotIsomorf(df, 'EV', 2)
-plotIsomorf(df, 'GH', 1)
+#plotIsomorf(df, 'GH', 1)
 #plotIsomorf(df, 'GH', 2)
 
 #plotEVvsGH(df)
@@ -742,6 +747,5 @@ plotIsomorf(df, 'GH', 1)
 #caweatBITable(df)
 #xweatBITable(df)
 #caweatESTable(df)
-#xweatESTable(df)
+xweatESTable(df)
 #mainOldTable(df)
-
