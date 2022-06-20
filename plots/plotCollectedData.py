@@ -19,6 +19,14 @@ models = [
 'cc10017Align',
 'cc10017vecmap',
 'cc10017vecmapSup',
+'cc10017vmsfromen2ar',
+'cc10017vmsfromen2ca',
+'cc10017vmsfromen2de',
+'cc10017vmsfromen2es',
+'cc10017vmsfromen2it',
+'cc10017vmsfromen2hr',
+'cc10017vmsfromen2ru',
+'cc10017vmsfromen2tr',
 'w2v2langs',
 'w2v9langs',
 'bert0'+language, 
@@ -39,6 +47,14 @@ naming = {
 'cc10017Align':'CCeAli',
 'cc10017vecmap':'CCeVMuns',
 'cc10017vecmapSup':'CCeVMsup',
+'cc10017vmsfromen2ar':'en2ar',
+'cc10017vmsfromen2ca':'en2ca',
+'cc10017vmsfromen2de':'en2de',
+'cc10017vmsfromen2es':'en2es',
+'cc10017vmsfromen2it':'en2it',
+'cc10017vmsfromen2hr':'en2hr',
+'cc10017vmsfromen2ru':'en2ru',
+'cc10017vmsfromen2tr':'en2tr',
 'w2v2langs':'CCe2langs',
 'w2v9langs':'CCe9langs',
 'bert0':'mBERT$_{0}$', 
@@ -369,14 +385,35 @@ def plotSExModel(df, test, weat):
    plt.clf()
     
     
+def plotSExEnglish2langs(df, test):
+
+   dfTrads = df[df['language'].str.startswith('en0') & ( df['model'].str.startswith('cc10017vmsfromen2') | df['model'].str.fullmatch('cc10017') )& (df['test']==test)  ]
+   dfOrigs = df[(df['language'].str.startswith("en_US1")) & df['language'].str.startswith('en') &  ( df['model'].str.startswith('cc10017vmsfromen2') | df['model'].str.fullmatch('cc10017') ) & (df['test']==test)  ]
+   asymmetric_errorTr = np.array(list(zip(dfTrads['DsizeEffectLO'], dfTrads['DsizeEffectUP']))).T
+   asymmetric_errorOr = np.array(list(zip(dfOrigs['DeffMedLO'], dfOrigs['DeffMedUP']))).T
+
+   dfTrads['labels'] = dfTrads.apply(lambda L: L.model.replace(L.model, naming[L.model]), axis=1)
+   dfOrigs['labels'] = dfOrigs.apply(lambda L: L.model.replace(L.model, naming[L.model]), axis=1)
+   fig = plt.figure(figsize=(5, 4))
+   plt.errorbar(dfTrads['labels'], dfTrads['sizeEffect'], yerr=asymmetric_errorTr, fmt='o', ecolor = 'darkred', color='black', markersize=12, fillstyle='none')
+   plt.errorbar(dfOrigs['labels'], dfOrigs['effMedian'], yerr=asymmetric_errorOr, fmt='o', ecolor = 'black', color='black', markersize=12)
+
+   plt.ylabel('Effect size $d$', fontdict=fontAx)
+   plt.ylim(-0,2)
+   plt.yticks(np.arange(-0, 2.01, 0.5))
+   plt.xticks(rotation=60)
+   plt.tight_layout(pad=0.03)
+   plt.savefig('effectSize2langs_WEAT'+str(test)+'.png')
+   plt.clf()
+    
     
     
 def plotIsomorf(df, measure, test):
    #model = 'cc10017vecmapSup'
    #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & (df['source']==0)  & (df['model']==model) ]
-   #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test)]
+   dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test)]
    #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & (df['source']==1)]
-   dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & ((df['model'].str.startswith('w')) | (df['model'].str.startswith('x')) | (df['model'].str.startswith('b')))  ]
+   #dfWithISO = df[(df[measure].str.contains('\.')) & (df['test']==test) & ((df['model'].str.startswith('w')) | (df['model'].str.startswith('x')) | (df['model'].str.startswith('b')))  ]
 #   dfWithISO = df[(df[measure].str.isnumeric()) & (df['test']==test) & (df['source']==1) ]
    asymmetric_error = np.array(list(zip(dfWithISO['DsizeEffectLO'], dfWithISO['DsizeEffectUP']))).T
 
@@ -415,6 +452,9 @@ def plotIsomorf(df, measure, test):
    dfLan = dfWithISO[(dfWithISO['language'].str.startswith('tr'))]
    plt.plot(dfLan[measure].astype('float'),  dfLan['sizeEffect'], 'm>', markersize=11)
 
+#   dfLan = dfWithISO[(dfWithISO['language'].str.startswith('en'))]
+#   plt.plot(dfLan[measure].astype('float'),  dfLan['sizeEffect'], 'ko', markersize=11)
+
    m,b = np.polyfit(dfWithISO[measure].astype('float'), dfWithISO['sizeEffect'].astype('float'), 1)
    plt.plot(dfWithISO[measure].astype('float'), m*dfWithISO[measure].astype('float') + b)
 
@@ -427,7 +467,7 @@ def plotIsomorf(df, measure, test):
                    Line2D([0], [0], color='m', marker='v', label='ca', markersize=17),
                    Line2D([0], [0], color='m', marker='^', label='ru', markersize=17),
                    Line2D([0], [0], color='m', marker='>', label='tr', markersize=17)
-   #                ,Line2D([0], [0], color='k', marker='o', label='en', markersize=17)
+#                   ,Line2D([0], [0], color='k', marker='o', label='en', markersize=17)
                    ]
 
    
@@ -444,7 +484,7 @@ def plotIsomorf(df, measure, test):
    plt.tight_layout(pad=0.03)
    plt.legend(handles=legend_elements, ncol=4, loc='lower center', frameon=False)
    #plt.show()
-   plt.savefig('iso'+measure+'_mlmWEAT'+str(test)+'.png')
+   plt.savefig('iso'+measure+'_newWEAT'+str(test)+'.png')
    plt.clf()
 
 
@@ -524,6 +564,7 @@ def caweatBITable(df):
                if(model.endswith(lan)):
                   model = model.replace(lan,'XX')
            print(name + ' & ' +line[:-1] + ' \\\\')
+           
                
 def xweatBITable(df):
    languages = ["ar", "ca", "de", "es", "hr", "it", "ru", "tr"]
@@ -737,15 +778,18 @@ df = pd.read_csv(dataFile)
 #plotSExModel(df, 1, 'or')
 #plotSExModel(df, 2, 'or')
 
+#plotSExEnglish2langs(df, 1)
+#plotSExEnglish2langs(df, 2)
+
 #plotIsomorf(df, 'EV', 1)
 #plotIsomorf(df, 'EV', 2)
 #plotIsomorf(df, 'GH', 1)
 #plotIsomorf(df, 'GH', 2)
 
-#plotEVvsGH(df)
+plotEVvsGH(df)
 
 #caweatBITable(df)
 #xweatBITable(df)
 #caweatESTable(df)
-xweatESTable(df)
+#xweatESTable(df)
 #mainOldTable(df)
