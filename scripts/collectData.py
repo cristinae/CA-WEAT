@@ -3,18 +3,26 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
-language = 'tr'
+language = 'en'
 #prefixS = './'+language+'/sigmas'
-prefixS = './rest/sigmas'
+prefixS = './en/sigmas'
 models = [
 'wiki',
 'wikiAlign',
 'ccwp',
 'cc10017',
 'cc10017Align',
-'cc10017vecmap',
-'cc10017vecmapSup',
-'w2v2langs',
+#'cc10017vecmap',
+#'cc10017vecmapSup',
+'cc10017vmsfromen2ar',
+'cc10017vmsfromen2ca',
+'cc10017vmsfromen2de',
+'cc10017vmsfromen2es',
+'cc10017vmsfromen2it',
+'cc10017vmsfromen2hr',
+'cc10017vmsfromen2ru',
+'cc10017vmsfromen2tr',
+#'w2v2langs',
 'w2v9langs',
 'bert0', 
 'bert11',
@@ -90,9 +98,9 @@ for test in range(1,3):
     countsWeapons = []
     countsPleasant = []
     countsUnpleasant = []
-    for i in range(1,30):
+    #for i in range(1,30):
     #for i in ["_ES1", "_ES2", "_ES3", "_EC1", "_EC2", "_BO1", "_CO1", "_CO2", "_MX1", "_MX2"]:
-    #for i in ["_US1", "_US2", "_US3", "_US4", "_US5"]:
+    for i in ["_US1", "_US2", "_US3", "_US4", "_US5"]:
         # size effects and statistics
         instance = language +str(i)
         fileNameSig = prefixS+'/ca_'+model+'_'+ instance +'_cosine_'+str(test)+'_uncased.res'
@@ -227,7 +235,8 @@ for test in range(1,3):
        countsUnpleasant = '-'
        
     # Isometry
-    if model in isodf.values and language != 'en':
+#    if model in isodf.values and language != 'en':
+    if model in isodf.values and language != 'en' or (language == 'en' and model.startswith('cc10017vmsfromen2')):
        EV = isodf.loc[isodf['model'] == model][language+'EV'].values[0]
        GH = isodf.loc[isodf['model'] == model][language+'GH'].values[0]
     else:
