@@ -21,7 +21,7 @@ Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. The (Undesired) Attenu
 
 ## CA-WEATs
 
-The folder ```data``` contains the csv files with the cultural aware lists for WEAT1 and WEAT2 in 26 languages 
+The folder ```data``` contains the tsv files with the cultural aware lists for WEAT1 and WEAT2 in 26 languages 
 (```ar```, 
 ```bg```, 
 ```bn```, 
@@ -47,7 +47,7 @@ The folder ```data``` contains the csv files with the cultural aware lists for W
 ```tr```, 
 ```uk```, 
 ```vi```, 
-```zh```)
+```zh```).
 
 <p align="center">
   <img src="data/CA_WEATv1s.png" width="1100" title="Distribution per country">
