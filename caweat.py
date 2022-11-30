@@ -16,7 +16,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 
 
-class XWEAT(object):
+class CAWEAT(object):
   """
   Perform WEAT (Word Embedding Association Test) bias tests on embeddings.
   Follows from Caliskan et al 2017 (10.1126/science.aal4230).
@@ -233,8 +233,8 @@ class XWEAT(object):
 
 
   def weat_1(self, lang):
-    #df = pd.read_csv('./data/weat_origs5.tsv', sep='\t',index_col=False)
-    df = pd.read_csv('./data/weat_trads.tsv', sep='\t',index_col=False)
+    df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
+    #df = pd.read_csv('./data/X-WEATv1.tsv', sep='\t',index_col=False)
     
     targets_1 = df.loc[df['LANG'] == lang]['FLOWERS'].values[0].replace(', ', ',').split(',')
     targets_2 = df.loc[df['LANG'] == lang]['INSECTS'].values[0].replace(', ', ',').split(',')
@@ -244,8 +244,8 @@ class XWEAT(object):
     return targets_1, targets_2, attributes_1, attributes_2
 
   def weat_2(self, lang):
-    #df = pd.read_csv('./data/weat_origs5.tsv', sep='\t',index_col=False)
-    df = pd.read_csv('./data/weat_trads.tsv', sep='\t',index_col=False)
+    df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
+    #df = pd.read_csv('./data/X-WEATv1.tsv', sep='\t',index_col=False)
 
     targets_1 = df.loc[df['LANG'] == lang]['INSTRUMENTS'].values[0].replace(', ', ',').split(',')
     targets_2 = df.loc[df['LANG'] == lang]['WEAPONS'].values[0].replace(', ', ',').split(',')
@@ -279,7 +279,7 @@ def main():
     if s not in {'False', 'True', 'false', 'true'}:
       raise ValueError('Not a valid boolean string')
     return s == 'True' or s == 'true'
-  parser = argparse.ArgumentParser(description="Running XWEAT")
+  parser = argparse.ArgumentParser(description="Running CA-WEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--permutation_number", type=int, default=None,
                       help="Number of permutations (otherwise all will be run)", required=False)
@@ -297,13 +297,13 @@ def main():
 
   start = time.time()
   logging.basicConfig(level=logging.INFO)
-  weat = XWEAT()
+  weat = CAWEAT()
   if args.test_number == 1:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.lang)
-    logging.info("XWEAT1 started")
+    logging.info("CA-WEAT1 started")
   elif args.test_number == 2:
     targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.lang)
-    logging.info("XWEAT2 started")
+    logging.info("CA-WEAT2 started")
   else:
     raise ValueError("Only WEAT 1 and 2 are supported")
 
