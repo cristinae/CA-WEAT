@@ -2,16 +2,16 @@
 
 This repository contains the data and scripts necessary to reproduce the experiments in 
 
-Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. The (Undesired) Attenuation of Human Biases by Multilinguality. In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, Online and Abu Dhabi. Association for Computational Linguistics.
+Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. The (Undesired) Attenuation of Human Biases by Multilinguality. In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, Online and Abu Dhabi, UAE. Association for Computational Linguistics.
 
 ```
 @inproceedings{espana-bonet-etal-2022-attenuation,
-    title = "Comparing Feature-Engineering and Feature-Learning Approaches for Multilingual Translationese Classification",
-    author = "Espa{\~n}a-Bonet, Cristina  and  Barrón-Cede{\~n}o, Alberto",
+    title = "The (Undesired) Attenuation of Human Biases by Multilinguality",
+    author = "Espa{\~n}a-Bonet, Cristina  and  Barr\'on-Cede{\~n}o, Alberto",
     booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing",
     month = dec,
     year = "2022",
-    address = "Online and Abu Dhabi",
+    address = "Online and Abu Dhabi, UAE",
     publisher = "Association for Computational Linguistics",
     url = "https://aclanthology.org/2022.emnlp-main.",
     doi = "",
