@@ -55,7 +55,7 @@ The folder ```data``` contains the tsv files with the cultural aware lists for W
 
 ## Bias and Size Effect
 
-The calculation of the statistic and size effect has been adapted from [Lauscher and Glavas (SEM* 2019)](https://github.com/umanlp/XWEAT). Please, use ```runCaweat.sh``` specifying the languages to consider (LANGID in the [CA-WEAT file](data/CA-WEATv1.tsv)) and the embedding model. Feel free to change the number of permutations to calculate p-values or the number of bootstraps for confidence intervals. If your embedding model has the vocabulary lowercased use the option ```--lower```.
+The calculation of the statistic and size effect has been adapted from [Lauscher and Glavas (SEM* 2019)](https://github.com/umanlp/XWEAT). Please, use ```runCaweat.sh``` specifying the languages to consider (LANG column in the [CA-WEAT file](data/CA-WEATv1.tsv)) and the embedding model. Feel free to change the number of permutations to calculate p-values or the number of bootstraps for confidence intervals. If your embedding model has the vocabulary lowercased use the option ```--lower```.
 
 ### Tables and Plots
 
