@@ -8,7 +8,11 @@ Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. [The (Undesired) Atten
 
 ## CA-WEATs
 
-The folder ```data``` contains the tsv files with the cultural aware lists for WEAT1 and WEAT2 in 26 languages:
+Word embedding association tests (WEAT) are made of lists of items and attributes that are related to the concepts used in implicit association tests (IAT) in social psychology. In this work we focus on (universal) non-social tests: IAT1 (flowers and insects vs pleasant and unpleasant attributes) and IAT2 (musical instruments and weapons vs pleasant and unpleasant attributes). IAT results show human positive biases towards flowers and musical instruments.
+
+CA-WEAT is the cultural aware version of the English WEAT lists, where lists are generated from scratch for every new language by native speakers therefore preserving cultural differences among languages.
+
+The folder ```data``` in this repo contains the tsv files with the cultural aware lists for WEAT1 and WEAT2 in 26 languages:
 ```ar```, 
 ```bg```, 
 ```bn```, 
