@@ -2,7 +2,7 @@
 
 This repository contains the data and scripts necessary to reproduce the experiments in 
 
-Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. The (Undesired) Attenuation of Human Biases by Multilinguality. In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, Online and Abu Dhabi, UAE. Association for Computational Linguistics.
+Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. [The (Undesired) Attenuation of Human Biases by Multilinguality](https://preview.aclanthology.org/emnlp-22-ingestion/2022.emnlp-main.133/). In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, pages 2056–2077, Abu Dhabi, United Arab Emirates. Association for Computational Linguistics.
 
 (bibtex at the bottom)
 
@@ -34,7 +34,7 @@ The folder ```data``` contains the tsv files with the cultural aware lists for W
 ```tr```, 
 ```uk```, 
 ```vi```, 
-```zh```. Different dialects are included in the dataset (e.g., both Iberian and Mexican Spanish). The geographical distribution is represented in the following map: 
+```zh```. Different dialects are included in the dataset (e.g., Spanish from Mexico, Bolivia, Spain...). The geographical distribution is represented in the following map: 
 
 <p align="center">
   <img src="data/CA_WEATv1s.png" width="1100" title="Distribution per country">
@@ -44,7 +44,7 @@ The folder ```data``` contains the tsv files with the cultural aware lists for W
 
 The calculation of the statistic and size effect has been adapted from [Lauscher and Glavas (SEM* 2019)](https://github.com/umanlp/XWEAT). 
 
-Script ``runCaweat.sh``` can be used to specify the languages to consider (LANG column in the [CA-WEAT file](data/CA-WEATv1.tsv)) and the embedding model. Feel free to change the number of permutations to calculate p-values or the number of bootstraps for confidence intervals. Use flag ```--lower``` if the embedding model has the vocabulary lowercased.
+Script ```runCaweat.sh``` can be used to specify the languages to consider (LANG column in the [CA-WEAT file](data/CA-WEATv1.tsv)) and the embedding model. Feel free to change the number of permutations to calculate p-values or the number of bootstraps for confidence intervals. Use flag ```--lower``` if the embedding model has the vocabulary lowercased.
 
 ### Tables and Plots
 
@@ -63,8 +63,8 @@ Please, use the following bibtex entry when citing this research work
     year = "2022",
     address = "Online and Abu Dhabi, UAE",
     publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/2022.emnlp-main.",
+    url = "https://aclanthology.org/2022.emnlp-main.133",
     doi = "",
-    pages = "--"
+    pages = "2056–-2077"
 }
 ```
