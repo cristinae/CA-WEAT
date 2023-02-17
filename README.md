@@ -2,7 +2,7 @@
 
 This repository contains the data and scripts necessary to reproduce the experiments in 
 
-Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. [The (Undesired) Attenuation of Human Biases by Multilinguality](https://preview.aclanthology.org/emnlp-22-ingestion/2022.emnlp-main.133/). In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, pages 2056–2077, Abu Dhabi, United Arab Emirates. Association for Computational Linguistics.
+Cristina España-Bonet and Alberto Barrón-Cedeño. 2022. [The (Undesired) Attenuation of Human Biases by Multilinguality](https://aclanthology.org/2022.emnlp-main.133/). In Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, pages 2056–2077, Abu Dhabi, United Arab Emirates. Association for Computational Linguistics.
 
 (bibtex at the bottom)
 
@@ -63,16 +63,15 @@ The results for the 16 embedding models and the 91 lists reported in the paper a
 Please, use the following bibtex entry when citing this research work
 
 ```
-@inproceedings{espana-bonet-etal-2022-attenuation,
+@inproceedings{espana-bonet-barron-cedeno-2022-undesired,
     title = "The (Undesired) Attenuation of Human Biases by Multilinguality",
-    author = "Espa{\~n}a-Bonet, Cristina  and  Barr\'on-Cede{\~n}o, Alberto",
+    author = "Espa{\~n}a-Bonet, Cristina  and Barr{\'o}n-Cede{\~n}o, Alberto",
     booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing",
     month = dec,
     year = "2022",
-    address = "Online and Abu Dhabi, UAE",
+    address = "Abu Dhabi, United Arab Emirates",
     publisher = "Association for Computational Linguistics",
     url = "https://aclanthology.org/2022.emnlp-main.133",
-    doi = "",
-    pages = "2056–-2077"
+    pages = "2056--2077"
 }
 ```
