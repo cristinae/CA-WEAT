@@ -123,7 +123,6 @@ class CAWEAT(object):
     return np.sum([self.word_association_with_attribute_precomputed_sims(t1, A1, A2) for t1 in T1]) \
            - np.sum([self.word_association_with_attribute_precomputed_sims(t2, A1, A2) for t2 in T2])
 
-
   def weat_effect_size_precomputed_sims(self, T1, T2, A1, A2):
     return (
              np.mean([self.word_association_with_attribute_precomputed_sims(t1, A1, A2) for t1 in T1]) -
@@ -131,16 +130,32 @@ class CAWEAT(object):
            ) / np.std([self.word_association_with_attribute_precomputed_sims(w, A1, A2) for w in T1 + T2])
 
 
+  def _generate_bootstrap(self, V):
+    bootstrap =random.choices(V, k=len(V))
+    return bootstrap
+
+  def sigma_differential_association_precomputed_sims(self, T1, T2, A1, A2, samples, confidence_level):
+    differentials = np.zeros(samples)
+    for i in range(samples):
+        differentials[i] = self.differential_association_precomputed_sims(self._generate_bootstrap(T1), self._generate_bootstrap(T2), self._generate_bootstrap(A1), self._generate_bootstrap((A2)))
+    return np.percentile(differentials,[(100-confidence_level)/2,(100-(100-confidence_level)/2)])
+
+  def sigma_weat_effect_size_precomputed_sims(self, T1, T2, A1, A2, samples, confidence_level):
+    effect_sizes = np.zeros(samples)
+    for i in range(samples):
+        effect_sizes[i] = self.weat_effect_size_precomputed_sims(self._generate_bootstrap(T1), self._generate_bootstrap(T2), self._generate_bootstrap(A1), self._generate_bootstrap((A2)))
+    return np.percentile(effect_sizes,[(100-confidence_level)/2,(100-(100-confidence_level)/2)]) 
+#    return intervals
+
+
   def _random_permutation(self, iterable, r=None):
     pool = tuple(iterable)
     r = len(pool) if r is None else r
     return tuple(random.sample(pool, r))
 
-  def weat_p_value_precomputed_sims(self, T1, T2, A1, A2, sample):
-    logging.info("Calculating p value ... ")
+  def _generate_permutations(self, T1, T2, sample):
     size_of_permutation = min(len(T1), len(T2))
     T1_T2 = T1 + T2
-    observed_test_stats_over_permutations = []
     total_possible_permutations = math.factorial(len(T1_T2)) / math.factorial(size_of_permutation) / math.factorial((len(T1_T2)-size_of_permutation))
     logging.info("Number of possible permutations: %d", total_possible_permutations)
     if not sample or sample >= total_possible_permutations:
@@ -150,7 +165,12 @@ class CAWEAT(object):
       permutations = set()
       while len(permutations) < sample:
         permutations.add(tuple(sorted(self._random_permutation(T1_T2, size_of_permutation))))
+    return permutations
 
+  def weat_p_value_precomputed_sims(self, T1, T2, A1, A2, permutations):
+    logging.info("Calculating p value ... ")
+    T1_T2 = T1 + T2
+    observed_test_stats_over_permutations = []
     for Xi in permutations:
       Yi = filterfalse(lambda w: w in Xi, T1_T2)
       observed_test_stats_over_permutations.append(self.differential_association_precomputed_sims(Xi, Yi, A1, A2))
@@ -160,15 +180,19 @@ class CAWEAT(object):
     is_over = np.array([o > unperturbed for o in observed_test_stats_over_permutations])
     return is_over.sum() / is_over.size
 
-  def weat_stats_precomputed_sims(self, T1, T2, A1, A2, sample_p=None):
+  def weat_stats_precomputed_sims(self, T1, T2, A1, A2, bootstraps, confidence, sample_p=None):
     test_statistic = self.differential_association_precomputed_sims(T1, T2, A1, A2)
+    interval_lowS, interval_highS = self.sigma_differential_association_precomputed_sims(T1, T2, A1, A2, bootstraps, confidence)
     effect_size = self.weat_effect_size_precomputed_sims(T1, T2, A1, A2)
-    p = self.weat_p_value_precomputed_sims(T1, T2, A1, A2, sample=sample_p)
-    return test_statistic, effect_size, p
+    interval_low, interval_high = self.sigma_weat_effect_size_precomputed_sims(T1, T2, A1, A2, bootstraps, confidence)
+    #permutations = self._generate_permutations(T1, T2, sample=sample_p)
+    #p = self.weat_p_value_precomputed_sims(T1, T2, A1, A2, permutations)
+    p = 0
+    return test_statistic, interval_lowS, interval_highS, effect_size, interval_low, interval_high, p
 
   def _create_vocab(self):
     """
-    >>> weat = XWEAT(None); weat._create_vocab()
+    >>> weat = CAWEAT(None); weat._create_vocab()
     :return: all
     """
     all = []
@@ -181,19 +205,7 @@ class CAWEAT(object):
     all = set(all)
     return all
 
-  def _output_vocab(self, path="./data/vocab_en.txt"):
-    """
-    >>> weat = XWEAT(None); weat._output_vocab()
-    """
-    vocab = self._create_vocab()
-    with codecs.open(path, "w", "utf8") as f:
-      for w in vocab:
-        f.write(w)
-        f.write("\n")
-      f.close()
-
-
-  def run_test_precomputed_sims(self, target_1, target_2, attributes_1, attributes_2, sample_p=None, similarity_type="cosine"):
+  def run_test_precomputed_sims(self, target_1, target_2, attributes_1, attributes_2, bootstraps=1000, confidence=95, sample_p=None, similarity_type="cosine"):
     """Run the WEAT test for differential association between two
     sets of target words and two sets of attributes.
 
@@ -229,12 +241,11 @@ class CAWEAT(object):
     assert len(A1) == len(A2)
     self._build_embedding_matrix()
     self._init_similarities(similarity_type)
-    return self.weat_stats_precomputed_sims(T1, T2, A1, A2, sample_p)
+    return self.weat_stats_precomputed_sims(T1, T2, A1, A2, bootstraps, confidence, sample_p)
 
 
   def weat_1(self, lang):
     df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
-    #df = pd.read_csv('./data/X-WEATv1.tsv', sep='\t',index_col=False)
     
     targets_1 = df.loc[df['LANG'] == lang]['FLOWERS'].values[0].replace(', ', ',').split(',')
     targets_2 = df.loc[df['LANG'] == lang]['INSECTS'].values[0].replace(', ', ',').split(',')
@@ -245,7 +256,6 @@ class CAWEAT(object):
 
   def weat_2(self, lang):
     df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
-    #df = pd.read_csv('./data/X-WEATv1.tsv', sep='\t',index_col=False)
 
     targets_1 = df.loc[df['LANG'] == lang]['INSTRUMENTS'].values[0].replace(', ', ',').split(',')
     targets_2 = df.loc[df['LANG'] == lang]['WEAPONS'].values[0].replace(', ', ',').split(',')
@@ -264,15 +274,16 @@ def load_embedding_dict(vocab_path="", vector_path="", embeddings_path="", glove
   if embeddings_path != "":
     embd_dict = utils.load_embeddings(embeddings_path, word2vec=False)
     return embd_dict
-  else:
-    embd_dict = {}
-    vocab = load_vocab_goran(vocab_path)
-    vectors = load_vectors_goran(vector_path)
-    for term, index in vocab.items():
-      embd_dict[term] = vectors[index]
-    assert len(embd_dict) == len(vocab)
-    return embd_dict
 
+def format_output(result):
+    max_assoc = '{:.2f}'.format(round(result[2]-result[0],2))
+    min_assoc = '{:.2f}'.format(round(result[0]-result[1],2))
+    max_eff = '{:.2f}'.format(round(result[5]-result[3],2))
+    min_eff = '{:.2f}'.format(round(result[3]-result[4],2))
+    formatted = '{:.2f}'.format(round(result[0],2)) + '$^{+' + max_assoc + '}_{-' + min_assoc +'}  ' + \
+                '{:.2f}'.format(round(result[3],2)) + '$^{+' + max_eff + '}_{-' + min_eff +'}  ' + \
+                '{:.2f}'.format(round(result[6],4))
+    return formatted
 
 def main():
   def boolean_string(s):
@@ -281,28 +292,31 @@ def main():
     return s == 'True' or s == 'true'
   parser = argparse.ArgumentParser(description="Running CA-WEAT")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
-  parser.add_argument("--permutation_number", type=int, default=None,
-                      help="Number of permutations (otherwise all will be run)", required=False)
-  parser.add_argument("--output_file", type=str, default=None, help="File to store the results)", required=False)
+  parser.add_argument("--permutation_number", type=int, default=0,
+                      help="Number of permutations (otherwise none will be run)", required=False)
+  parser.add_argument("--confidence_level", type=int, default=95, help="Confidence level in %", required=False)
+  parser.add_argument("--bootstrap_number", type=int, default=5000, help="Number of bootstrap sets", required=False)
+  parser.add_argument("--output_file", type=str, default=None, help="File to store the results", required=False)
   parser.add_argument("--lower", type=boolean_string, default=False, help="Whether to lower the vocab", required=True)
   parser.add_argument("--phrases", type=boolean_string, default=True, help="Accept multiwords in WEAT lists", required=False)
   parser.add_argument("--similarity_type", type=str, default="cosine", help="Which similarity function to use",
                       required=False)
   parser.add_argument("--embedding_vocab", type=str, help="Vocab of the embeddings")
   parser.add_argument("--embedding_vectors", type=str, help="Vectors of the embeddings")
-  parser.add_argument("--is_vec_format", type=boolean_string, default=False, help="Whether embeddings are in vec format")
+  parser.add_argument("--is_vec_format", type=boolean_string, default=True, help="Whether embeddings are in vec format")
   parser.add_argument("--embeddings", type=str, help="Vectors and vocab of the embeddings")
   parser.add_argument("--lang", type=str, default="en", help="Language to test")
   args = parser.parse_args()
 
   start = time.time()
   logging.basicConfig(level=logging.INFO)
-  weat = CAWEAT()
+  random.seed(3642)
+  caweat = CAWEAT()
   if args.test_number == 1:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_1(args.lang)
+    targets_1, targets_2, attributes_1, attributes_2 = caweat.weat_1(args.lang)
     logging.info("CA-WEAT1 started")
   elif args.test_number == 2:
-    targets_1, targets_2, attributes_1, attributes_2 = weat.weat_2(args.lang)
+    targets_1, targets_2, attributes_1, attributes_2 = caweat.weat_2(args.lang)
     logging.info("CA-WEAT2 started")
   else:
     raise ValueError("Only WEAT 1 and 2 are supported")
@@ -330,12 +344,13 @@ def main():
     embd_dict = load_embedding_dict(embeddings_path=args.embeddings, glove=False)
   else:
     embd_dict = load_embedding_dict(vocab_path=args.embedding_vocab, vector_path=args.embedding_vectors, glove=False)
-  weat.set_embd_dict(embd_dict)
+  caweat.set_embd_dict(embd_dict)
 
   logging.info("Embeddings loaded")
   logging.info("Running test")
-  result = weat.run_test_precomputed_sims(targets_1, targets_2, attributes_1, attributes_2, args.permutation_number, args.similarity_type)
-  logging.info(result)
+  result = caweat.run_test_precomputed_sims(targets_1, targets_2, attributes_1, attributes_2, args.bootstrap_number, args.confidence_level, args.permutation_number, args.similarity_type)
+  nice_result = format_output(result)
+  logging.info(nice_result)
   with codecs.open(args.output_file, "w", "utf8") as f:
     f.write("\n") 
     f.write("Config: ")
@@ -343,6 +358,8 @@ def main():
     f.write(str(args.lower) + " and ")
     f.write(str(args.permutation_number) + "\n")
     f.write("Result: test_statistic, effect_size, p")
+    f.write(nice_result)
+    f.write("\n")
     f.write(str(result))
     f.write("\n")
     end = time.time()
@@ -352,3 +369,4 @@ def main():
 
 if __name__ == "__main__":
   main()
+  
