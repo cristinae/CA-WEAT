@@ -3,6 +3,7 @@ import random
 from itertools import filterfalse
 from itertools import combinations
 import codecs
+import unidecode
 import pandas as pd
 import utils
 import os
@@ -298,6 +299,7 @@ def main():
   parser.add_argument("--bootstrap_number", type=int, default=5000, help="Number of bootstrap sets", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results", required=False)
   parser.add_argument("--lower", type=boolean_string, default=False, help="Whether to lower the vocab", required=True)
+  parser.add_argument("--accents", type=boolean_string, default=False, help="Whether to remove accents/diacritics", required=True)
   parser.add_argument("--phrases", type=boolean_string, default=True, help="Accept multiwords in WEAT lists", required=False)
   parser.add_argument("--similarity_type", type=str, default="cosine", help="Which similarity function to use",
                       required=False)
@@ -326,6 +328,12 @@ def main():
     targets_2 = [t.lower() for t in targets_2]
     attributes_1 = [a.lower() for a in attributes_1]
     attributes_2 = [a.lower() for a in attributes_2]
+
+  if args.accents:
+    targets_1 = [unidecode.unidecode(t) for t in targets_1]
+    targets_2 = [unidecode.unidecode(t) for t in targets_2]
+    attributes_1 = [unidecode.unidecode(a) for a in attributes_1]
+    attributes_2 = [unidecode.unidecode(a) for a in attributes_2]
 
   if args.phrases:
     targets_1 = [t.lstrip().rstrip().replace(' ','_') for t in targets_1]
