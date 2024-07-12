@@ -1,22 +1,22 @@
 # -*- coding: UTF-8 -*-
 
 import argparse
-from collections import Counter
 import logging
 import os
 import pandas as pd
 
-from collections import OrderedDict
+
+from collections import Counter, OrderedDict
+
 
 
 logging.basicConfig(level=logging.INFO)
 
-
 # albarron, 24/08/23. This is legacy from the time when no CLI was there. The
 # input file should simply come from the command line
 
-# albarron, 10/11/23. In order to create these files, go to the google sheets 
-# and download a sheet as .tsv 
+# albarron, 10/11/23. In order to create these files, go to the google sheets
+# and download a sheet as .tsv
 PATH = "/Users/albarron/projects/ca-weat"
 TSVS = {
 	"Spanish": "CulturalAwareWEAT-es.tsv",
@@ -33,7 +33,6 @@ LANG_GERMAN = "German"
 LANG_GREEK = "el"
 LANG_ITALIAN = "Italian"
 LANG_RESTA = "Resta"
-
 
 class Inspector:
     """
