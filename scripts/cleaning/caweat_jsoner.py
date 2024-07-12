@@ -10,7 +10,7 @@ COLUMNS = [
     "LANG",
     "VERSION",
     "BORN PLACE",
-    "FRUITS", # Not in v1 of the dataset???
+    # "FRUITS", # Not included because they are they are not part of IATs. Not published until used
     "WEAPONS",
     "FLOWERS", 
     "INSTRUMENTS", 
@@ -25,7 +25,7 @@ EXTRA_COLUMNS = [
 ]
 
 WEATS = [
-    "FRUITS", 
+    # "FRUITS", # Not included because they are they are not part of IATs. Not published until used
     "WEAPONS", 
     "FLOWERS", 
     "INSTRUMENTS", 
@@ -90,7 +90,8 @@ def tsv_to_json(input_file, output_file):
 
 def json_to_tsv(input_file, output_file):
     df = pd.read_json(input_file,
-        orient="index")
+        orient="index",
+        dtype=False)
    
    # Since LANG is an index in the json, it has to be explictly named before dumping
     df.index.name = 'LANG'
@@ -128,3 +129,9 @@ if __name__ == "__main__":
     param["mode"] = arguments.mode
 
     main(param)
+
+# From tsv to json
+# $ python scripts/cleaning/caweat_jsoner.py -i data/tmp/CulturalAwareWEAT-es.tsv -o data/tmp/kk.json
+
+# From json to tsv
+# $ python scripts/cleaning/caweat_jsoner.py -t -i data/tmp/kk.json -o data/tmp/kk.tsv
