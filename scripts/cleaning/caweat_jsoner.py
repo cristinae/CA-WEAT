@@ -81,6 +81,8 @@ def tsv_to_json(input_file, output_file):
     df.insert(loc=0, column="TYPE", value=["original"] * len(df))
 
     # Dumping into new file
+    # TODO thi sis still hard-coded??
+    # TODO I am not getting the language when I read
     df.to_json("data/tmp/kk.json",
         force_ascii=False,
         orient="index",     #"records",
@@ -94,6 +96,7 @@ def json_to_tsv(input_file, output_file):
         dtype=False)
    
    # Since LANG is an index in the json, it has to be explictly named before dumping
+    # TODO I have to load this thing when I read the json
     df.index.name = 'LANG'
     print(df.head())
     # Dumping into new file

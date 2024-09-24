@@ -244,19 +244,33 @@ class CAWEAT(object):
     self._init_similarities(similarity_type)
     return self.weat_stats_precomputed_sims(T1, T2, A1, A2, bootstraps, confidence, sample_p)
 
+  def weat_1(self, input_file, lang):
+    df = self._load_weat_from_file(input_file)
+    # if input_file.endswith('.tsv'):
+    #   # df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
+    #   df = pd.read_csv(input_file, sep='\t',index_col=False)
+    # else:
+    #   df = pd.read_json(input_file, orient="index", dtype=False) 
+    #   df.index.name = 'LANG'
+    #   df.reset_index(level=0, inplace=True)
+    #   print(df)
 
-  def weat_1(self, lang):
-    df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
-    
-    targets_1 = df.loc[df['LANG'] == lang]['FLOWERS'].values[0].replace(', ', ',').split(',')
+      # df = pd.read_csv(input_file, orient="index", dtype=False)
+    # print(df.loc[df['LANG'] == lang]['INSECTS'])
+    targets_1 = df.loc[df['LANG'] == lang]['INSTRUMENTS'].values[0].replace(', ', ',').split(',')
     targets_2 = df.loc[df['LANG'] == lang]['INSECTS'].values[0].replace(', ', ',').split(',')
     attributes_1 = df.loc[df['LANG'] == lang]['PLEASANT'].values[0].replace(', ', ',').split(',')
     attributes_2 = df.loc[df['LANG'] == lang]['UNPLEASANT'].values[0].replace(', ', ',').split(',')
 
     return targets_1, targets_2, attributes_1, attributes_2
 
-  def weat_2(self, lang):
-    df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
+  def weat_2(self, input_file, lang):
+    df = self._load_weat_from_file(input_file)
+    # if input_file.endswith('.tsv'):
+    #   # df = pd.read_csv('./data/CA-WEATv1.tsv', sep='\t',index_col=False)
+    #   df = pd.read_csv(input_file, orient="index", dtype=False)
+    # else:
+    #   df = pd.read_json(input_file, orient="index", dtype=False) #csv(input_file, sep='\t',index_col=False)
 
     targets_1 = df.loc[df['LANG'] == lang]['INSTRUMENTS'].values[0].replace(', ', ',').split(',')
     targets_2 = df.loc[df['LANG'] == lang]['WEAPONS'].values[0].replace(', ', ',').split(',')
@@ -265,6 +279,18 @@ class CAWEAT(object):
 
     return targets_1, targets_2, attributes_1, attributes_2
 
+  @staticmethod
+  def _load_weat_from_file(input_file):
+    if input_file.endswith('.tsv'):
+      df = pd.read_csv(input_file, sep='\t',index_col=False)
+    else:
+      df = pd.read_json(input_file, orient="index", dtype=False) 
+      df.index.name = 'LANG'
+      df.reset_index(level=0, inplace=True)
+      print(df)
+    return df
+
+    
 def load_embedding_dict(vocab_path="", vector_path="", embeddings_path="", glove=False, postspec=False):
   """
   >>> _load_embedding_dict()
@@ -286,19 +312,24 @@ def format_output(result):
                 '{:.2f}'.format(round(result[6],4))
     return formatted
 
+
 def main():
   def boolean_string(s):
     if s not in {'False', 'True', 'false', 'true'}:
       raise ValueError('Not a valid boolean string')
     return s == 'True' or s == 'true'
+    
   parser = argparse.ArgumentParser(description="Running CA-WEAT")
+  # As of now, the default is still v1, in tsv format
+  parser.add_argument("--input", type=str, dest="input", required=False, default="./data/CA-WEATv1.tsv",
+                 help = "Full/relative path to the input file (tsv or json)")
   parser.add_argument("--test_number", type=int, help="Number of the weat test to run", required=False)
   parser.add_argument("--permutation_number", type=int, default=0,
                       help="Number of permutations (otherwise none will be run)", required=False)
   parser.add_argument("--confidence_level", type=int, default=95, help="Confidence level in %", required=False)
   parser.add_argument("--bootstrap_number", type=int, default=5000, help="Number of bootstrap sets", required=False)
   parser.add_argument("--output_file", type=str, default=None, help="File to store the results", required=False)
-  parser.add_argument("--lower", type=boolean_string, default=False, help="Whether to lower the vocab", required=True)
+  parser.add_argument("--lower", type=boolean_string, default=False, help="Whether to lower the vocab" , required=True)
   parser.add_argument("--accents", type=boolean_string, default=False, help="Whether to remove accents/diacritics", required=True)
   parser.add_argument("--phrases", type=boolean_string, default=True, help="Accept multiwords in WEAT lists", required=False)
   parser.add_argument("--similarity_type", type=str, default="cosine", help="Which similarity function to use",
@@ -313,12 +344,16 @@ def main():
   start = time.time()
   logging.basicConfig(level=logging.INFO)
   random.seed(3642)
+
+  input_file = args.input
+
+
   caweat = CAWEAT()
   if args.test_number == 1:
-    targets_1, targets_2, attributes_1, attributes_2 = caweat.weat_1(args.lang)
+    targets_1, targets_2, attributes_1, attributes_2 = caweat.weat_1(input_file, args.lang)
     logging.info("CA-WEAT1 started")
   elif args.test_number == 2:
-    targets_1, targets_2, attributes_1, attributes_2 = caweat.weat_2(args.lang)
+    targets_1, targets_2, attributes_1, attributes_2 = caweat.weat_2(input_file, args.lang)
     logging.info("CA-WEAT2 started")
   else:
     raise ValueError("Only WEAT 1 and 2 are supported")
@@ -341,7 +376,7 @@ def main():
     attributes_1 = [a.lstrip().rstrip().replace(' ','_') for a in attributes_1]
     attributes_2 = [a.lstrip().rstrip().replace(' ','_') for a in attributes_2]
 
-
+  logging.info(input)
   logging.info(targets_1)
   logging.info(targets_2)
   logging.info(attributes_1)
