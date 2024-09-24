@@ -9,7 +9,6 @@ import pandas as pd
 from collections import Counter, OrderedDict
 
 
-
 logging.basicConfig(level=logging.INFO)
 
 # albarron, 24/08/23. This is legacy from the time when no CLI was there. The
@@ -27,7 +26,7 @@ TSVS = {
 }
 
 # These are the names of the different sheets, downloaded from the google sheets file.
-LANG_SPANISH = "es"
+LANG_SPANISH = "Spanish"
 LANG_FRENCH = "fr"
 LANG_GERMAN = "German"
 LANG_GREEK = "el"
@@ -39,9 +38,9 @@ class Inspector:
     A simplistic class to inspect the CA WEAT records
     """
 
-    categories = ["fruits", "flowers", "instruments", "insects", "pleasant", "unpleasant"]
+    categories = ["fruits", "weapons", "flowers", "instruments", "insects", "pleasant", "unpleasant"]
     """
-    The 6 categories of the CA WEAT study
+    The 7 categories of the CA WEAT study
     """
 
     def __init__(self, language, path_to_tsv):
@@ -170,6 +169,18 @@ class Inspector:
 
     def to_string(self):
         return self.df.to_string
+
+    def get_dataframe(self):
+        return self.df
+
+    def get_dataframe_normalizedcolnames(self):
+        df = self.df.copy()
+
+        TYPE	WHO	LANG	BORN PLACE	WEAPONS	FLOWERS	INSTRUMENTS	INSECTS	PLEASANT	UNPLEASANT
+
+        return df
+
+
 
     def get_flowers(self):
         return self._get_x("flowers")

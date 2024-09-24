@@ -10,7 +10,6 @@ from cleaning.caweat_inspector import Inspector
 
 logging.basicConfig(level=logging.INFO)
 
-
 # This code is derived from
 # https://towardsdatascience.com/recommendation-system-matrix-factorization-d61978660b4b
 # (function matrix_factorization comes from it)
@@ -58,7 +57,6 @@ def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02):
             break
 
     return P, Q.T
-
 #
 # R = [
 #
@@ -93,6 +91,7 @@ def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02):
 
 # print(nR)
 
+
 class Completer(Inspector):
 
     #  The score assigned to the top term
@@ -101,9 +100,11 @@ class Completer(Inspector):
 
     def __init__(self, language, path_to_tsv):
         super(Completer, self).__init__(language, path_to_tsv)
+        logging.info("Input file: %s", path_to_tsv)
+        logging.info("Language: %s", language)
 
     def complete(self, category="fruits"):
-        print(category.upper())
+        logging.info("Working with category: %s", category.upper())
         elements = self._get_x(category)
 
         R, people, terms = self._matrixy(elements)
@@ -111,8 +112,8 @@ class Completer(Inspector):
         R = np.array(R)
 
         self._dumper(R, people, terms, ".".join([self.DUMP_PREFIX, category, "orig.tsv"]))
-
         logging.info("Vectorising")
+
         # N: num of User
         N = len(R)
         # M: num of Movie
@@ -126,17 +127,51 @@ class Completer(Inspector):
         nP, nQ = matrix_factorization(R, P, Q, K)
 
         nR = np.dot(nP, nQ.T)
-
+        # print(nR)
         self._dumper(nR, people, terms, ".".join([self.DUMP_PREFIX, category, "comp.tsv"]))
 
+        logging.info("Trying to fill the next gap")
 
-        # call the vectorizer
+        # TODO consider to do people and terms global
+        self._next_element4all(R, nR, people, terms)
+
+        # return nR
+
+    @staticmethod
+    def _next_element4all(orig, fill, people, terms):
+        # print(orig)
+        # converting empties into 1s, existing into 0
+        orig = pd.DataFrame(orig, index=people, columns=terms)
+        fill = pd.DataFrame(fill, index=people, columns=terms)
+
+        orig = orig * -1
+        orig += 1
+
+        # print("=" * 20)
+        orig = orig.where(orig > 0, 0)
+        # orig.fillna()
+        # print(orig)
+
+        # print("=" * 20)
+        # print("=" * 20)
+
+        # print(fill)
+        # print("=" * 20)
+
+        # masking fill: the ones I have already will become 0, because they are irrelevant
+        fill = fill.where(orig == 1, 0)
+        # print(fill)
+
+        print(fill.idxmax(1))
+        # return fill.idxmax(1)
+
+
     @staticmethod
     def _dumper(matty, people, terms, file_name):
         df = pd.DataFrame(matty, index=people, columns=terms)
-        print(matty)
-        print(df)
-        logging.info("Matrix saved to %s", (file_name))
+        # print(matty)
+        # print(df)
+        logging.info("Matrix saved to %s", file_name)
         df.to_csv(file_name, sep="\t")
 
     def _matrixy(self, terms):
@@ -164,20 +199,26 @@ class Completer(Inspector):
         logging.debug("Full vocabulary:", vocabulary)
 
         matty = np.zeros([len(email_to_index), len(vocabulary)])
-        print(matty)
+        logging.info("Zero matrix created")
+        # print(matty)
         logging.debug("Shape of the matrix:", matty.shape)
         for email in terms:
+            current = set()
             score = self.MAX_SCORE
             for tok in terms[email]:
-                matty[email_to_index[email]][term_to_index[tok]] = score
-                score -= 1
-        print(matty)
+                if tok not in current and "xx" not in tok :
+                    matty[email_to_index[email]][term_to_index[tok]] = score
+                    score -= 1
+                    current.add(tok)
+                else:
+                    logging.info("Volunteer %s duplicated %s", email, tok)
+            if score > 0:
+                logging.warning("%s has at least one missing", email)
+        logging.info("Preferences filled into matrix")
+        # print(matty)
         return matty, emails, vocabulary
 
             # AQUI LLAMAR LA MATRIZ Y DEVOLVERLA. TENGO QUE EMPEZAR EN 25, de izquierda a derecha
-
-
-
 
 
 def main(param):
@@ -197,7 +238,7 @@ if __name__ == "__main__":
                         help="which category to pseudo-complete")
 
     parser.add_argument('-l', "--language", dest="lang",
-                        required=False, default="es",
+                        required=False, default="Spanish",
                         help = "language")
 
     parser.add_argument('-t', "--tsv", dest="input",
