@@ -275,18 +275,6 @@
       "PLEASANT":"bailar, correr, jugar, reir, dormir, comer, imaginar, soñar, cantar, brincar, abrazar, beber, convivir, nadar, ordenar, comprar, leer, cine, ver películas, platicar, besar, caminar, contemplar la naturaleza, ver llover, cerveza",
       "UNPLEASANT":"ruido, pobreza, injusticia, desigualdad, racismo, clasismo, homofobia, ira, agresividad, desconfianza, amargura, críticas, discriminación, influyentismo, ambición, golpes físicos, irresponsabilidad, violencia, desamor, mentira, egoísmo, autoritarismo, envidia, celos, sufrimiento"
    },
-   "es_MX10":{
-      "TYPE":"original",
-      "WHO":"anonymous",
-      "VERSION":2.0,
-      "BORN PLACE":"México, Ciudad de Mexico",
-      "WEAPONS":"pistola, rifle, escopeta, espada, abanico de guerra, bayoneta, arco, cuchillo mariposa, daga, espada corta, flecha, navaja, picahielo, machete, sable, puñal, hacha, destornillador, guadaña de guerra, lanza, bomba, clavos, gas pimienta, ballesta, cuchillo de cocina",
-      "FLOWERS":"verbena, nochebuena, cempasúchil, dalia negra, orquídea, magnolia, girasol, rosa, alcatraz, bugambilia, jamaica, flor de calabaza, margarita, clavel, lirio, nardo, narciso, petunia, azalea, tulipán, flor de cerezo, jacinto, lavanda, hortensia, anémona",
-      "INSTRUMENTS":"guitarra, piano, teclado, pianica, banjo, arpa, violín, flauta dulce, flauta transversal, viola, violonchelo, acordeón, contrabajo, maraca, marimba, timbal, tambor, tamborín, batería, saxofón, trompeta, corneta, triángulo, clarinete, tuba",
-      "INSECTS":"araña, hormiga, escarabajo, catarina, mosca, mosquito, mariposa, polilla, abeja, avispa, cara de niño, saltamontes, grillo, cucaracha, escorpión, libélula, insecto palo, mantis religiosa, garrapata, cienpies, gusano, oruga, azotador, termita, pulga",
-      "PLEASANT":"luna, nubes, agua, color menta, color durazno, noche, olor de la naranja, pasto, vestidos, libros, cosas doradas, cosas brillantes, abrazos, calor, música, bailar, ver una actuación, cantar, dibujar, pintar, escribir, amigos, reír, lluvia, té",
-      "UNPLEASANT":"insectos, cigarros, alcohol, olor a carne quemada, sangre, huesos, fuego, oscuridad, bosque de noche, basura, ratas, suciedad, pegajoso, dolor, asco, miedo, tocar cosas escurridizas, sabor del metal, podrido, telarañas, hoyos pequeños y muy juntos, payasos, grasa, dientes podridos, filamentos de la piel"
-   },
    "es_MX11":{
       "TYPE":"original",
       "WHO":"anonymous",
@@ -322,17 +310,5 @@
       "INSECTS":"escarabajo, alacrán, escorpión, araña, tarántula, hormiga, cochinilla, caracol, cara de niño, mosquito, mosca, gusano, lombriz, larva, azotador, babosa, mariposa, palomilla, chinche, piojo, cucaracha, libélula, oruga, catarina, abeja",
       "PLEASANT":"comida, fiesta, familia, amistad, juegos, escuela, animales, naturaleza, libro, película, televisión, conocimiento, abrazo, dulce, botana, música, deporte, flor, mascota, lluvia, mar, atardecer, paseo, aventura, natación",
       "UNPLEASANT":"violencia, armas, pelea, gritos, incomodidad, engaño, rechazo, ineptitud, ignorancia, basura, contaminación, enfermedad, pobreza, maltrato animal, secuestro, robo, acoso, inseguridad, traición, violación, extorsión, insectos, política, drogas, suicidio"
-   },
-   "es_CU1":{
-      "TYPE":"original",
-      "WHO":"anonymous",
-      "VERSION":2.0,
-      "BORN PLACE":"Cienfuegos, Cuba",
-      "WEAPONS":"cuchillo, navaya, revolver, pistola, machete, sable, daga, florete, espada, cañón, ametralladora, puñal, escopeta, fusil de asalto, bomba, rifle, ballesta, arco de flecha, hacha, gladio, berreta, katana, espadín, bayoneta, granada",
-      "FLOWERS":"girasol, rosa, margarita, orquídea, clavel, tulipán, lirio, hortensia, azucena, dalia, pensamiento, jazmín, amapola, narciso, gladiolo, lavanda, crisantemo, petunia, flor de pascua, flor del paraíso, flor de loto, geranio, camelia, campanilla, siempreviva",
-      "INSTRUMENTS":"guitarra, piano, violín, trompeta, trombón, flauta, tambor, bajo, saxofón, clarinete, arpa, violonchelo, acordeón, contrabajo, batería, platillos, bongó, timbal, guitarra eléctrica, tuba, gaita, armónica, maracas, matraca, triángulo",
-      "INSECTS":"hormiga, abeja, avispa, mariposa, polilla, mosquito, mosca, gusano de seda, chiche, pulga, garrapata, escarabajo, saltamontes, mariquita, cucharacha, grillo, luciérnaga, escorpión, abejorro, mosquito tigre, chinche, araña, piojo, libélula, avispón",
-      "PLEASANT":"terciopelo, algodón, seda, viajar, dormir, flor, reir, acariciar un perro, acariciar un gato, hacer una buena acción, deporte, leer un libro, fiesta, ducharse, peinarse, cantar, cocinar, dormir, rascarse, música, conversar, masaje, chiste, conocer a alguien nuevo, comer",
-      "UNPLEASANT":"basura, aparcar mal, personas desagradables, envidia, negativismo, negación de responsabilidades, colarse, baboso, lijas, ruido, pobre higiene personal, descomposición, beber demasiado alcohol, ocupar más de dos asientos en el bus, no ceder el asiento a persona, maltatar, no esperar que la gente salga del metro, escupir, vomitar, hablar alto, atracón, conflictos, muerte, quemarse con el sol, despido"
    }
 }
