@@ -6,7 +6,7 @@ import pandas as pd
 from collections import Counter, OrderedDict
 
 
-from cleaning.caweat_inspector import Inspector
+from caweat_inspector import Inspector
 
 logging.basicConfig(level=logging.INFO)
 
@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     parser.add_argument('-l', "--language", dest="lang",
                         required=False, default="Spanish",
-                        help = "language")
+                        help = "language (of the headers)")
 
     parser.add_argument('-t', "--tsv", dest="input",
                         required=True,

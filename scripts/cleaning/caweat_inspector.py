@@ -26,11 +26,11 @@ TSVS = {
 }
 
 # These are the names of the different sheets, downloaded from the google sheets file.
-LANG_SPANISH = "Spanish"
+LANG_SPANISH = "es"
 LANG_FRENCH = "fr"
-LANG_GERMAN = "German"
+LANG_GERMAN = "de"
 LANG_GREEK = "el"
-LANG_ITALIAN = "Italian"
+LANG_ITALIAN = "it"
 LANG_RESTA = "Resta"
 
 class Inspector:
@@ -176,7 +176,7 @@ class Inspector:
     def get_dataframe_normalizedcolnames(self):
         df = self.df.copy()
 
-        TYPE	WHO	LANG	BORN PLACE	WEAPONS	FLOWERS	INSTRUMENTS	INSECTS	PLEASANT	UNPLEASANT
+        #TYPE	WHO	LANG	BORN PLACE	WEAPONS	FLOWERS	INSTRUMENTS	INSECTS	PLEASANT	UNPLEASANT
 
         return df
 

@@ -9,7 +9,7 @@ from collections import Counter, OrderedDict
 COLUMNS = [
     "LANG",
     "VERSION",
-    "BORN PLACE",
+    "BIRTH PLACE",
     # "FRUITS", # Not included because they are they are not part of IATs. Not published until used
     "WEAPONS",
     "FLOWERS", 
@@ -81,9 +81,8 @@ def tsv_to_json(input_file, output_file):
     df.insert(loc=0, column="TYPE", value=["original"] * len(df))
 
     # Dumping into new file
-    # TODO thi sis still hard-coded??
     # TODO I am not getting the language when I read
-    df.to_json("data/tmp/kk.json",
+    df.to_json(output_file,
         force_ascii=False,
         orient="index",     #"records",
         # lines=True,
