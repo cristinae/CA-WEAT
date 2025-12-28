@@ -48,7 +48,7 @@ The folder ```data``` in this repo contains the tsv files with the cultural awar
 
 If you see your home in grey, yellow, orange... we would highly appreciate your contribution for the next CA-WEAT dataset. If your country is colored in purple, don't be shy, we appreciate the data anyway :-). You'll find the form to submit new CA-WEAT lists and the instructions in several languages: [Catalan](https://docs.google.com/forms/d/e/1FAIpQLSfuCtPWl6MgpnitOLWbbncslIVE9ggY1HcezkPwmOvTu9R7SQ/viewform?usp=sf_link), [English](https://docs.google.com/forms/d/e/1FAIpQLSe7PxnTNox-TYTQZFz0S6j0XNv_fcZIg6RgZdOURveKIKs9Pw/viewform?usp=sf_link), [French](https://docs.google.com/forms/d/e/1FAIpQLSeyOaVTzNlpcIhWvbHLisX7VO72Gr3PL7K5gnFLKzDDimLGag/viewform?usp=sf_link), [German](https://docs.google.com/forms/d/e/1FAIpQLSeLsN2u8NWS-glF91uyMpE6UooyiZtfM_yB0c0AmolUsxYrBA/viewform?usp=sf_link), [Italian](https://docs.google.com/forms/d/e/1FAIpQLScFcw_ORqR9NwSzL3jY3s18e4Z2hEBNCbZjSgEhewmOymvIHA/viewform?usp=sf_link) and [Spanish](https://docs.google.com/forms/d/e/1FAIpQLSciZNJr-xxk-W4lvCc5Ja_BixdWy68doagOKmhJx7VmZILyaw/viewform?usp=sf_link). Whatever form you chose, you need to add the words in your mother tongue. If you are here you know about NLP... please, don't use named entities or words that are ambiguous, especially if they coincide with a stop word!
 
-Thanks to your help we currently have almost 200 lists:
+Thanks to your help we currently have almost [200 lists](data/CA-WEATv3.tsv):
 <p align="center">
   <img src="data/CA_WEATv3s.png" width="1100" title="Distribution per country">
 </p>
@@ -68,7 +68,7 @@ The results for the 16 embedding models and the 91 lists reported in the paper a
 Please, use the following bibtex entry when citing this research work
 
 ```
-@inproceedings{espana-bonet-barron-cedeno-2022-undesired,
+@InProceedings{espana-bonet-barron-cedeno-2022-undesired,
     title = "The (Undesired) Attenuation of Human Biases by Multilinguality",
     author = "Espa{\~n}a-Bonet, Cristina  and Barr{\'o}n-Cede{\~n}o, Alberto",
     booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing",
@@ -78,5 +78,25 @@ Please, use the following bibtex entry when citing this research work
     publisher = "Association for Computational Linguistics",
     url = "https://aclanthology.org/2022.emnlp-main.133",
     pages = "2056--2077"
+}
+```
+
+If you use the [version with the Spanish varieties](data/CA-WEATv2_es.json) cite
+
+```
+@InProceedings{espana-bonet-barron-cedeno-2024-elote-naacl,
+    title = "Elote, Choclo and Mazorca: on the Varieties of {S}panish",
+    author = "Espa{\~n}a-Bonet, Cristina  and
+      Barr{\'o}n-Cede{\~n}o, Alberto",
+    editor = "Duh, Kevin  and
+      Gomez, Helena  and
+      Bethard, Steven",
+    booktitle = "Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)",
+    month = jun,
+    year = "2024",
+    address = "Mexico City, Mexico",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.naacl-long.204",
+    pages = "3689--3711"
 }
 ```
